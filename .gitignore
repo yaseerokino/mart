@@ -106,3 +106,4 @@ dist
 
 server/build
 client/build
+server/.env.development.local
