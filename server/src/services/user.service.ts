@@ -1,5 +1,12 @@
-import { STATUS_OK, STATUS_INTERNAL_SERVER_ERROR, STATUS_CONFLICT, STATUS_BAD_REQUEST } from '../constants/index';
-import { VerifyUserProps, CreateUserProps } from '../schemas/user.schema';
+import { nanoid } from 'nanoid';
+import {
+  STATUS_UNAUTHORIZED,
+  STATUS_OK,
+  STATUS_INTERNAL_SERVER_ERROR,
+  STATUS_CONFLICT,
+  STATUS_BAD_REQUEST,
+} from '../constants/index';
+import { ForgotUserPasswordProps, VerifyUserProps, CreateUserProps } from '../schemas/user.schema';
 import { UserModel } from '../models/user.model';
 
 class UserService {
@@ -10,8 +17,19 @@ class UserService {
     if (user) {
       return { success: false, message: `${body.email} is already registered`, status: STATUS_CONFLICT };
     }
-    await this.users.create(body);
-    return { success: true, message: 'Account created', status: STATUS_OK };
+    const newUser = await this.users.create(body);
+    return {
+      success: true,
+      message: 'Account created, kindly verify your email through the link sent to your inbox',
+      user: {
+        id: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        verificationToken: newUser.verificationToken,
+      },
+      status: STATUS_OK,
+    };
   };
 
   verifyUser = async (params: VerifyUserProps) => {
@@ -28,6 +46,33 @@ class UserService {
     user.verified = true;
     await user.save();
     return { success: true, message: 'Account verified', status: STATUS_OK };
+  };
+
+  forgotUserPassword = async (body: ForgotUserPasswordProps) => {
+    const user = await this.users.findOne(body);
+
+    if (!user) {
+      return { success: false, message: 'Account not found', status: STATUS_BAD_REQUEST };
+    }
+    if (!user.verified) {
+      return { success: false, message: 'Account has not been verified', status: STATUS_UNAUTHORIZED };
+    }
+    const passwordResetToken = nanoid();
+    user.passwordResetToken = passwordResetToken;
+    await user.save();
+
+    return {
+      status: STATUS_OK,
+      success: true,
+      message: `Check your inbox for the next steps. If you don't receive an email, and it's not in your spam folder this could mean you signed up with a different address.`,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        passwordResetToken: user.passwordResetToken,
+      },
+    };
   };
 
   private static findUserByEmail = async (email: string) => UserModel.findOne({ email });

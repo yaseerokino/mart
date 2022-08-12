@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import UserController from '../controllers/user.controller';
 import validate from '../middlewares/validate.middleware';
-import { createUserSchema, verifyUserSchema } from '../schemas/user.schema';
+import { createUserSchema, verifyUserSchema, forgotUserPasswordSchema } from '../schemas/user.schema';
 
 class UserRoute {
   path = '/users';
@@ -20,6 +20,11 @@ class UserRoute {
       `${this.path}/verify/:userId/:verificationToken`,
       validate(verifyUserSchema),
       this.controller.verifyUser
+    );
+    this.router.post(
+      `${this.path}/forgot-password`,
+      validate(forgotUserPasswordSchema),
+      this.controller.forgotUserPassword
     );
   };
 }
