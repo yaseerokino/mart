@@ -6,7 +6,12 @@ import {
   STATUS_CONFLICT,
   STATUS_BAD_REQUEST,
 } from '../constants/index';
-import { ForgotUserPasswordProps, VerifyUserProps, CreateUserProps } from '../schemas/user.schema';
+import {
+  ForgotUserPasswordProps,
+  VerifyUserProps,
+  CreateUserProps,
+  ResetUserPasswordProps,
+} from '../schemas/user.schema';
 import { UserModel } from '../models/user.model';
 
 class UserService {
@@ -73,6 +78,20 @@ class UserService {
         passwordResetToken: user.passwordResetToken,
       },
     };
+  };
+
+  resetUserPassword = async (body: ResetUserPasswordProps['body'], params: ResetUserPasswordProps['params']) => {
+    const user = await UserService.findUserById(params.userId);
+    if (body.email !== user?.email) {
+      return { success: false, message: 'Please confirm your email', status: STATUS_BAD_REQUEST };
+    }
+    if (!user || !user.passwordResetToken || user.passwordResetToken !== params.passwordResetToken) {
+      return { success: false, message: 'Could not reset password, try again later', status: STATUS_BAD_REQUEST };
+    }
+    user.passwordResetToken = null;
+    user.password = body.password;
+    await user.save();
+    return { success: true, message: 'Password reset successful', status: STATUS_OK };
   };
 
   private static findUserByEmail = async (email: string) => UserModel.findOne({ email });

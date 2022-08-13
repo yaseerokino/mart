@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { ForgotUserPasswordProps, CreateUserProps, VerifyUserProps } from '../schemas/user.schema';
+import {
+  ResetUserPasswordProps,
+  ForgotUserPasswordProps,
+  CreateUserProps,
+  VerifyUserProps,
+} from '../schemas/user.schema';
 import UserMail, { MailDataProps } from '../mail/user.mail';
 import UserService from '../services/user.service';
 import mailer from '../utils/mailer';
@@ -40,6 +45,20 @@ class UserController {
       }
       const payload = this.mail.resetPasswordMail(user as MailDataProps);
       await mailer(payload);
+      res.status(status).json({ success, message });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  resetUserPassword = async (
+    req: Request<ResetUserPasswordProps['params'], {}, ResetUserPasswordProps['body']>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { body, params } = req;
+      const { status, message, success } = await this.service.resetUserPassword(body, params);
       res.status(status).json({ success, message });
     } catch (error) {
       next(error);

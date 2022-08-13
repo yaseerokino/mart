@@ -38,6 +38,28 @@ export const forgotUserPasswordSchema = object({
   }),
 });
 
+export const resetUserPasswordSchema = object({
+  params: object({
+    userId: string(),
+    passwordResetToken: string(),
+  }),
+  body: object({
+    email: string({
+      required_error: 'Email is required',
+    }).email('Not a valid email'),
+    password: string({
+      required_error: 'Password is required',
+    }).min(6, 'Password is too short, should be min 6 chars'),
+    passwordConfirmation: string({
+      required_error: 'Kindly confirm your password',
+    }),
+  }).refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Password do not match',
+    path: ['passwordConfirmation'],
+  }),
+});
+
 export type CreateUserProps = TypeOf<typeof createUserSchema>['body'];
 export type VerifyUserProps = TypeOf<typeof verifyUserSchema>['params'];
 export type ForgotUserPasswordProps = TypeOf<typeof forgotUserPasswordSchema>['body'];
+export type ResetUserPasswordProps = TypeOf<typeof resetUserPasswordSchema>;

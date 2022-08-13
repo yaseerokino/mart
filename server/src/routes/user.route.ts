@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import UserController from '../controllers/user.controller';
 import validate from '../middlewares/validate.middleware';
-import { createUserSchema, verifyUserSchema, forgotUserPasswordSchema } from '../schemas/user.schema';
+import {
+  createUserSchema,
+  verifyUserSchema,
+  forgotUserPasswordSchema,
+  resetUserPasswordSchema,
+} from '../schemas/user.schema';
 
 class UserRoute {
   path = '/users';
@@ -25,6 +30,12 @@ class UserRoute {
       `${this.path}/forgot-password`,
       validate(forgotUserPasswordSchema),
       this.controller.forgotUserPassword
+    );
+
+    this.router.post(
+      `${this.path}/reset-password/:userId/:passwordResetToken`,
+      validate(resetUserPasswordSchema),
+      this.controller.resetUserPassword
     );
   };
 }
