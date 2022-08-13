@@ -59,7 +59,15 @@ export const resetUserPasswordSchema = object({
   }),
 });
 
+export const createUserSessionSchema = object({
+  body: object({
+    email: string({ required_error: 'Email is required' }).email('Invalid email or password'),
+    password: string({ required_error: 'Password is required' }).min(6, 'Invalid email or password'),
+  }),
+});
+
 export type CreateUserProps = TypeOf<typeof createUserSchema>['body'];
 export type VerifyUserProps = TypeOf<typeof verifyUserSchema>['params'];
 export type ForgotUserPasswordProps = TypeOf<typeof forgotUserPasswordSchema>['body'];
 export type ResetUserPasswordProps = TypeOf<typeof resetUserPasswordSchema>;
+export type CreateUserSessionProps = TypeOf<typeof createUserSessionSchema>['body'];

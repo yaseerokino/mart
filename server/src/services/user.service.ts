@@ -89,6 +89,7 @@ class UserService {
       return { success: false, message: 'Could not reset password, try again later', status: STATUS_BAD_REQUEST };
     }
     user.passwordResetToken = null;
+    console.log(body);
     user.password = body.password;
     await user.save();
     return { success: true, message: 'Password reset successful', status: STATUS_OK };
