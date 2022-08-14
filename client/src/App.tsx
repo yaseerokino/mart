@@ -1,9 +1,5 @@
-import { Flex, Text } from '@chakra-ui/react';
+import Header from './components/header';
 
-const App = () => (
-  <Flex>
-    <Text color="red">Welcome to Mart client</Text>
-  </Flex>
-);
+const App = () => <Header />;
 
 export default App;
