@@ -1,8 +1,12 @@
 export default {
   colors: {
     'bg-canvas': {
-      default: 'gray.50',
+      default: 'blackAlpha.200',
       _dark: 'gray.900',
+    },
+    'bg-header': {
+      default: 'white',
+      _dark: 'black',
     },
     'bg-surface': {
       default: 'white',
@@ -59,4 +63,4 @@ export default {
     'on-accent-muted': 'brand.50',
     'on-accent-subtle': 'brand.100',
   },
-}
+};

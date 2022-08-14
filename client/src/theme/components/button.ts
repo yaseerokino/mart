@@ -4,7 +4,7 @@ const baseStyle = {
   ':focus:not(:focus-visible)': {
     boxShadow: 'none',
   },
-  fontWeight: 'medium',
+  fontWeight: 'small',
   borderRadius: 'lg',
 };
 
@@ -66,7 +66,7 @@ const variants = {
     color: 'emphasized',
     _hover: {
       bg: mode(
-        darken('gray.50', 1)(props.theme),
+        darken('gray.100', 1)(props.theme),
         darken('gray.700', 4)(props.theme)
       )(props),
     },
