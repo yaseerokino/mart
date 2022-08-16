@@ -101,6 +101,9 @@ const SignUpForm: React.FC = () => {
                   required: 'Password is required',
                 })}
               />
+              <FormErrorMessage>
+                {errors.password && (errors.password.message as any)}
+              </FormErrorMessage>
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="passwordConfirmation">
