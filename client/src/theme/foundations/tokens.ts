@@ -1,7 +1,7 @@
 export default {
   colors: {
     'bg-canvas': {
-      default: 'blackAlpha.200',
+      default: 'blackAlpha.50',
       _dark: 'gray.900',
     },
     'bg-header': {

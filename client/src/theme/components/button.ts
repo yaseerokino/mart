@@ -5,7 +5,7 @@ const baseStyle = {
     boxShadow: 'none',
   },
   fontWeight: 'small',
-  borderRadius: 'lg',
+  borderRadius: 'md',
 };
 
 const sizes = {
