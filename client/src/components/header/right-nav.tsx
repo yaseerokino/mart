@@ -23,10 +23,10 @@ const AccountMenu = () => (
       fontSize="md"
     />
     <MenuList fontSize="sm" border="none" bg="white" boxShadow="none">
-      <MenuItem as={Link} to="/login">
-        Login
+      <MenuItem as={Link} to="/sign-in">
+        Sign in
       </MenuItem>
-      <MenuItem as={Link} to="/create-account">
+      <MenuItem as={Link} to="/sign-up">
         Create account
       </MenuItem>
     </MenuList>

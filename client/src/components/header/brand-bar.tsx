@@ -1,4 +1,5 @@
 import { Icon, Flex } from '@chakra-ui/react';
+import { IconType } from 'react-icons';
 import {
   SiNike,
   SiApple,
@@ -10,15 +11,20 @@ import {
   SiUnilever,
 } from 'react-icons/si';
 
+interface IHeaderBrands {
+  name: string;
+  icon: IconType;
+}
+
 const brand = [
-  SiNike,
-  SiAdidas,
-  SiHp,
-  SiApple,
-  SiHuawei,
-  SiUnderarmour,
-  SiNokia,
-  SiUnilever,
+  { name: 'nike', icon: SiNike },
+  { name: 'adidas', icon: SiAdidas },
+  { name: 'hp', icon: SiHp },
+  { name: 'apple', icon: SiApple },
+  { name: 'huawei', icon: SiHuawei },
+  { name: 'under armour', icon: SiUnderarmour },
+  { name: 'nokia', icon: SiNokia },
+  { name: 'unilever', icon: SiUnilever },
 ];
 
 const BrandBar = () => (
@@ -29,8 +35,8 @@ const BrandBar = () => (
     align="center"
     justify={{ base: 'space-between', md: 'center' }}
   >
-    {brand.map((item) => (
-      <Icon as={item} fontSize={16} color="bg-header" />
+    {brand.map((item: IHeaderBrands) => (
+      <Icon key={item.name} as={item.icon} fontSize={16} color="bg-header" />
     ))}
   </Flex>
 );
