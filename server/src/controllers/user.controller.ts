@@ -18,11 +18,14 @@ class UserController {
     try {
       const { body } = req;
       const { status, message, success, user } = await this.service.createUser(body);
+      if (!success) {
+        return res.status(status).json({ success, message });
+      }
       const payload = this.mail.verifyUserMail(user as MailDataProps);
       await mailer(payload);
-      res.status(status).json({ success, message });
+      return res.status(status).json({ success, message });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   };
 
