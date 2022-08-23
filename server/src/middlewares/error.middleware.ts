@@ -24,6 +24,10 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
       return res.status(STATUS_BAD_REQUEST).json({ success: false, error: errors });
     }
 
+    if (error.code === 'ENOTFOUND') {
+      return res.status(STATUS_INTERNAL_SERVER_ERROR).json({ success: false, error: 'Email not sent' });
+    }
+
     if (error.code === 11000) {
       return res
         .status(STATUS_CONFLICT)

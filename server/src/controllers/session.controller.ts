@@ -14,6 +14,24 @@ class SessionController {
     try {
       const { body } = req;
       const { status, success, message, tokens } = await this.service.createUserSession(body);
+      res.cookie('accessToken', tokens.accessToken, {
+        maxAge: 900000, // 15 mins
+        httpOnly: true,
+        domain: 'localhost',
+        path: '/',
+        sameSite: 'strict',
+        secure: false,
+      });
+
+      res.cookie('refreshToken', tokens.refreshToken, {
+        maxAge: 3.154e10, // 1 year
+        httpOnly: true,
+        domain: 'localhost',
+        path: '/',
+        sameSite: 'strict',
+        secure: false,
+      });
+
       res.status(status).json({ success, message, tokens });
     } catch (error) {
       next(error);

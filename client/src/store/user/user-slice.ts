@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { createUser } from './user-action';
+import { IResponse } from '../../interfaces';
+import { createUser, createUserSession } from './user-action';
 
 interface UserStateProps {
   loading: boolean;
@@ -11,7 +12,7 @@ interface UserStateProps {
   success: boolean;
 }
 
-const initialState: UserStateProps = {
+export const initialState: UserStateProps = {
   loading: false,
   userInfo: {},
   userToken: null,
@@ -25,15 +26,30 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createUser.fulfilled, (state) => {
-        state.loading = false;
-        state.success = true;
-      })
       .addCase(createUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+      .addCase(createUser.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
       .addCase(createUser.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload as string | Array<string>;
+      });
+
+    builder
+      .addCase(createUserSession.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUserSession.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.success = true;
+        state.userToken = payload as string;
+      })
+      .addCase(createUserSession.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload as string | Array<string>;
       });

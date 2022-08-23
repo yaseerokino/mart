@@ -45,7 +45,7 @@ class SessionService {
   signAccessToken = async (user: DocumentType<User>) => {
     const payload = omit(JSON.parse(JSON.stringify(user)), userPrivateFields);
     const accessToken = this.jwt.sign(payload, 'accessTokenPrivateKey', {
-      expiresIn: '30m',
+      expiresIn: '15m',
     });
     return accessToken;
   };
