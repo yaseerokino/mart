@@ -38,7 +38,7 @@ class User {
   password: string;
 
   @prop({ enum: Role, default: 'customer' })
-  roles: Role;
+  role: Role;
 
   @prop({ default: false })
   verified: boolean;
@@ -64,10 +64,8 @@ export const userPrivateFields = [
   '__v',
   'verificationToken',
   'passwordResetToken',
-  'verified',
   'createdAt',
   'updatedAt',
-  'roles',
 ];
 
 const UserModel = getModelForClass(User);

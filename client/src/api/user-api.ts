@@ -1,17 +1,22 @@
 import { LocalStorage } from '../helper/storage';
 import { ICreateUser, ICreateUserSession } from '../interfaces/user';
-import axios from './axios';
+import { axiosPublic, axiosPrivate } from './axios';
+
+const path = 'users';
 
 const userAPI = {
-  createUser: (data: ICreateUser) =>
-    axios.post('users', data).then((response) => response.data),
   createUserSession: (data: ICreateUserSession) =>
-    axios.post('sessions', data).then((response) => {
-      if (response.data.accessToken) {
-        LocalStorage.set('user', response.data);
+    axiosPublic.post('sessions', data).then((response) => {
+      if (response.data) {
+        LocalStorage.set('session', response.data.tokens);
+        LocalStorage.set('user', response.data.user);
       }
       return response.data;
     }),
+  createUser: (data: ICreateUser) =>
+    axiosPublic.post(`${path}`, data).then((response) => response.data),
+  currentUser: () =>
+    axiosPrivate.get(`${path}/current`).then((response) => response),
 };
 
 export default userAPI;

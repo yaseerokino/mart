@@ -7,6 +7,7 @@ import {
   forgotUserPasswordSchema,
   resetUserPasswordSchema,
 } from '../schemas/user.schema';
+import { requireUser } from '../middlewares/auth.middleware';
 
 class UserRoute {
   path = '/users';
@@ -37,6 +38,8 @@ class UserRoute {
       validate(resetUserPasswordSchema),
       this.controller.resetUserPassword
     );
+
+    this.router.get(`${this.path}/current`, requireUser, this.controller.getCurrentUser);
   };
 }
 

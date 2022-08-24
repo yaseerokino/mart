@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { STATUS_OK } from '../constants/index';
 import {
   ResetUserPasswordProps,
   ForgotUserPasswordProps,
@@ -67,6 +68,8 @@ class UserController {
       next(error);
     }
   };
+
+  getCurrentUser = async (req: any, res: Response) => res.status(STATUS_OK).json({ success: true, user: req.user });
 }
 
 export default UserController;

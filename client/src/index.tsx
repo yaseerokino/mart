@@ -2,9 +2,13 @@ import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import {
+  BrowserRouter,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom';
 
 import App from './App';
+import historyRouterObject from './helper/history-router-object';
 import reportWebVitals from './reportWebVitals';
 import store from './store';
 import theme from './theme';
@@ -16,9 +20,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
-        <BrowserRouter>
+        <HistoryRouter history={historyRouterObject}>
           <App />
-        </BrowserRouter>
+        </HistoryRouter>
       </ChakraProvider>
     </Provider>
   </React.StrictMode>

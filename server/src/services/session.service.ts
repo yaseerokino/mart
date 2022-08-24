@@ -11,7 +11,7 @@ class SessionService {
 
   sessions = SessionModel;
 
-  jwt = new JWT();
+  jwt = JWT;
 
   createUserSession = async (body: CreateUserSessionProps): Promise<any> => {
     const user = await this.users.findOne({ email: body.email });
@@ -26,7 +26,13 @@ class SessionService {
     const accessToken = await this.signAccessToken(user);
     const refreshToken = await this.signRefreshToken({ userId: user._id });
 
-    return { success: true, tokens: { accessToken, refreshToken }, status: STATUS_OK, message: 'Login Successful' };
+    return {
+      success: true,
+      user: omit(JSON.parse(JSON.stringify(user)), userPrivateFields),
+      tokens: { accessToken, refreshToken },
+      status: STATUS_OK,
+      message: 'Login Successful',
+    };
   };
 
   refreshAccessToken = async ({ sessionId }: { sessionId: string }) => {

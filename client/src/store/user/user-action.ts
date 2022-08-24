@@ -13,15 +13,13 @@ export const createUser = createAsyncThunk(
       const response = await userAPI.createUser(userData);
       console.log('response =>', response);
       if (!response.success) {
-        return rejectWithValue(response.data.error || response.data.message);
+        return rejectWithValue(response.data as any);
       }
       return response;
     } catch (error: any) {
       console.log(error);
       if (error && error.response) {
-        return rejectWithValue(
-          error.response.data.error || error.response.data.message
-        );
+        return rejectWithValue(error.response.data as any);
       }
       return rejectWithValue(error.message);
     }
@@ -35,16 +33,14 @@ export const createUserSession = createAsyncThunk(
       const response = await userAPI.createUserSession(userData);
       console.log('response =>', response);
       if (!response.success) {
-        return rejectWithValue(response.error || response.message);
+        return rejectWithValue(response.data as any);
       }
       LocalStorage.set('tokens', response.tokens);
       return response;
     } catch (error: any) {
       console.log(error);
       if (error.response && error.response.data) {
-        return rejectWithValue(
-          error.response.data.error || error.response.data.message
-        );
+        return rejectWithValue(error.response.data as any);
       }
       return rejectWithValue(error.message);
     }

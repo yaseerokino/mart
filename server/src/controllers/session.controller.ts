@@ -8,31 +8,14 @@ import SessionService from '../services/session.service';
 class SessionController {
   service = new SessionService();
 
-  jwt = new JWT();
+  jwt = JWT;
 
   createUserSession = async (req: Request<{}, {}, CreateUserSessionProps>, res: Response, next: NextFunction) => {
     try {
       const { body } = req;
-      const { status, success, message, tokens } = await this.service.createUserSession(body);
-      res.cookie('accessToken', tokens.accessToken, {
-        maxAge: 900000, // 15 mins
-        httpOnly: true,
-        domain: 'localhost',
-        path: '/',
-        sameSite: 'strict',
-        secure: false,
-      });
+      const { status, success, message, user, tokens } = await this.service.createUserSession(body);
 
-      res.cookie('refreshToken', tokens.refreshToken, {
-        maxAge: 3.154e10, // 1 year
-        httpOnly: true,
-        domain: 'localhost',
-        path: '/',
-        sameSite: 'strict',
-        secure: false,
-      });
-
-      res.status(status).json({ success, message, tokens });
+      res.status(status).json({ success, message, user, tokens });
     } catch (error) {
       next(error);
     }

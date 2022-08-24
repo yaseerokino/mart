@@ -1,21 +1,36 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { IResponse } from '../../interfaces';
+import {
+  getAccessTokenFromStorage,
+  getRefreshTokenFromStorage,
+  getUserFromStorage,
+} from '../../helper/storage';
 import { createUser, createUserSession } from './user-action';
 
-interface UserStateProps {
+interface IUserState {
   loading: boolean;
-  userInfo: {};
-  userToken: null | string;
+  user: {};
+  session: {
+    accessToken: null | string;
+    refreshToken: null | string;
+  };
   error: null | string | Array<string>;
   success: boolean;
 }
 
-export const initialState: UserStateProps = {
+interface IErrorMessage {
+  error: string | Array<string>;
+  message: string;
+}
+
+export const initialState: IUserState = {
   loading: false,
-  userInfo: {},
-  userToken: null,
+  user: getUserFromStorage() || {},
+  session: {
+    accessToken: getAccessTokenFromStorage() || null,
+    refreshToken: getRefreshTokenFromStorage() || null,
+  },
   error: null,
   success: false,
 };
@@ -36,7 +51,9 @@ const userSlice = createSlice({
       })
       .addCase(createUser.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload as string | Array<string>;
+        state.error =
+          (payload as IErrorMessage).error ||
+          (payload as IErrorMessage).message;
       });
 
     builder
@@ -47,11 +64,14 @@ const userSlice = createSlice({
       .addCase(createUserSession.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.success = true;
-        state.userToken = payload as string;
+        state.session = payload.tokens;
+        state.user = payload.user;
       })
       .addCase(createUserSession.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload as string | Array<string>;
+        state.error =
+          (payload as IErrorMessage).error ||
+          (payload as IErrorMessage).message;
       });
   },
 });

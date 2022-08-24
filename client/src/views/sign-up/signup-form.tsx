@@ -10,6 +10,7 @@ import {
   Flex,
   useToast,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +22,8 @@ import { AppDispatch } from '../../store';
 import { createUser } from '../../store/user/user-action';
 
 const SignUpForm: React.FC = () => {
-  const { loading, error } = useSelector((state: any) => state.user);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const { loading } = useSelector((state: any) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const {
     register,
@@ -32,7 +34,7 @@ const SignUpForm: React.FC = () => {
   const toast = useToast();
   const handleRegistration = async (data: ICreateUser) => {
     dispatch(createUser(data)).then((res: any) => {
-      console.log(res);
+      console.log('some res', res);
       if (res.payload.success) {
         toast({
           title: res.payload.message || 'Something went wrong',
@@ -40,6 +42,8 @@ const SignUpForm: React.FC = () => {
           isClosable: true,
         });
         navigate('/login');
+      } else {
+        setErrorMsg(res.payload.error || res.payload.message);
       }
     });
   };
@@ -53,7 +57,7 @@ const SignUpForm: React.FC = () => {
         onSubmit={handleSubmit(handleRegistration)}
       >
         <Stack spacing="6">
-          {error && <ErrorBox error={error} />}
+          {errorMsg && <ErrorBox error={errorMsg} />}
           <Stack spacing="5">
             <Flex gap={4}>
               <FormControl isInvalid={!!errors.firstName}>
@@ -64,6 +68,7 @@ const SignUpForm: React.FC = () => {
                   {...register('firstName', {
                     required: 'First name is required',
                   })}
+                  onChange={() => setErrorMsg(null)}
                 />
                 <FormErrorMessage>
                   {errors.firstName && (errors.firstName.message as any)}
@@ -77,6 +82,7 @@ const SignUpForm: React.FC = () => {
                   {...register('lastName', {
                     required: 'Last name is required',
                   })}
+                  onChange={() => setErrorMsg(null)}
                 />
                 <FormErrorMessage>
                   {errors.lastName && (errors.lastName.message as any)}
@@ -89,6 +95,7 @@ const SignUpForm: React.FC = () => {
                 id="email"
                 type="email"
                 {...register('email', { required: 'Email is required' })}
+                onChange={() => setErrorMsg(null)}
               />
               <FormErrorMessage>
                 {errors.email && (errors.email.message as any)}{' '}
@@ -100,6 +107,7 @@ const SignUpForm: React.FC = () => {
                 {...register('password', {
                   required: 'Password is required',
                 })}
+                onChange={() => setErrorMsg(null)}
               />
               <FormErrorMessage>
                 {errors.password && (errors.password.message as any)}
@@ -115,6 +123,7 @@ const SignUpForm: React.FC = () => {
                 {...register('passwordConfirmation', {
                   required: 'Kindly confirm your password',
                 })}
+                onChange={() => setErrorMsg(null)}
               />
               <FormErrorMessage>
                 {errors.passwordConfirmation &&

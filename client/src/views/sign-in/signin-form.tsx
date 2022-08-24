@@ -11,6 +11,7 @@ import {
   Container,
   useToast,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +23,8 @@ import { AppDispatch } from '../../store';
 import { createUserSession } from '../../store/user/user-action';
 
 const SignInForm: React.FC = () => {
-  const { loading, error } = useSelector((state: any) => state.user);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const { loading } = useSelector((state: any) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const {
     register,
@@ -41,6 +43,8 @@ const SignInForm: React.FC = () => {
           isClosable: true,
         });
         navigate('/dashboard');
+      } else {
+        setErrorMsg(res.payload.error || res.payload.message);
       }
     });
   };
@@ -54,7 +58,7 @@ const SignInForm: React.FC = () => {
         onSubmit={handleSubmit(handleLogin)}
       >
         <Stack spacing="6">
-          {error && <ErrorBox error={error} />}
+          {errorMsg && <ErrorBox error={errorMsg} />}
           <Stack spacing="5">
             <FormControl isInvalid={!!errors.email}>
               <FormLabel htmlFor="email">Email</FormLabel>
@@ -62,6 +66,7 @@ const SignInForm: React.FC = () => {
                 id="email"
                 type="email"
                 {...register('email', { required: 'Email is required' })}
+                onChange={() => setErrorMsg(null)}
               />
               <FormErrorMessage>
                 {errors.email && (errors.email.message as any)}{' '}
@@ -73,6 +78,7 @@ const SignInForm: React.FC = () => {
                 {...register('password', {
                   required: 'Password is required',
                 })}
+                onChange={() => setErrorMsg(null)}
               />
               <FormErrorMessage>
                 {errors.password && (errors.password.message as any)}

@@ -38,7 +38,7 @@ class UserService {
   };
 
   verifyUser = async (params: VerifyUserProps) => {
-    const user = await UserService.findUserById(params.userId);
+    const user = await this.findUserById(params.userId);
     if (!user) {
       return { success: false, message: 'Could not verify account', status: STATUS_BAD_REQUEST };
     }
@@ -81,7 +81,7 @@ class UserService {
   };
 
   resetUserPassword = async (body: ResetUserPasswordProps['body'], params: ResetUserPasswordProps['params']) => {
-    const user = await UserService.findUserById(params.userId);
+    const user = await this.findUserById(params.userId);
     if (body.email !== user?.email) {
       return { success: false, message: 'Please confirm your email', status: STATUS_BAD_REQUEST };
     }
@@ -96,7 +96,7 @@ class UserService {
 
   private static findUserByEmail = async (email: string) => UserModel.findOne({ email });
 
-  private static findUserById = async (id: string) => UserModel.findById(id);
+  findUserById = async (id: string) => UserModel.findById(id);
 }
 
 export default UserService;

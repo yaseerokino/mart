@@ -9,13 +9,19 @@ export const LocalStorage = {
   },
 };
 
-export const SessionStorage = {
-  get: (key: string) => JSON.parse(sessionStorage.getItem(key) as string),
+export const getRefreshTokenFromStorage = () => {
+  const tokens = LocalStorage.get('session');
 
-  set: (key: string, value: any) => {
-    sessionStorage.setItem(key, JSON.stringify(value));
-  },
-  remove: (key: string) => {
-    sessionStorage.removeItem(key);
-  },
+  return tokens?.refreshToken;
+};
+
+export const getUserFromStorage = () => {
+  const user = LocalStorage.get('user');
+
+  return user;
+};
+
+export const getAccessTokenFromStorage = () => {
+  const tokens = LocalStorage.get('session');
+  return tokens?.accessToken;
 };

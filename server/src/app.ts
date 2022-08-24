@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import hpp from 'hpp';
 import compression from 'compression';
+import { deserializeUser } from './middlewares/auth.middleware';
 import { logger } from './utils';
 import { PORT, NODE_ENV } from './config';
 import initializeDB from './config/db';
@@ -39,6 +40,7 @@ class Application {
   };
 
   private initializeMiddlewares = () => {
+    this.app.use(deserializeUser);
     this.app.use(helmet());
     this.app.use(morgan('dev'));
     this.app.use(express.json());
