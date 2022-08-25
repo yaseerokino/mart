@@ -21,6 +21,8 @@
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
     "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-children-prop": "off",
     "no-console": "off",
     "func-names": "off",
     "no-process-exit": "off",

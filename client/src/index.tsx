@@ -1,9 +1,16 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import {
+  BrowserRouter,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom';
 
 import App from './App';
+import historyRouterObject from './helper/history-router-object';
 import reportWebVitals from './reportWebVitals';
+import store from './store';
 import theme from './theme';
 
 const root = ReactDOM.createRoot(
@@ -11,9 +18,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <App />
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider theme={theme}>
+        <HistoryRouter history={historyRouterObject}>
+          <App />
+        </HistoryRouter>
+      </ChakraProvider>
+    </Provider>
   </React.StrictMode>
 );
 
