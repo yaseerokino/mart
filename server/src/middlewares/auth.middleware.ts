@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { STATUS_FORBIDDEN, STATUS_UNAUTHORIZED } from '../constants/index';
+import { STATUS_BAD_REQUEST, STATUS_FORBIDDEN, STATUS_UNAUTHORIZED } from '../constants/index';
 import { TokenData, RequestWithUser } from '../interfaces/auth.interface';
 
 import UserService from '../services/user.service';
@@ -31,29 +31,22 @@ export const requireUser = async (req: any, res: Response, next: NextFunction) =
   return next();
 };
 
-// export const requireRoles = (roles: Array<string>) => {
-//   const hasRoles = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-//     let isAllowed = false;
-//     const {
-//       user: { _id },
-//     } = req;
+export const requireRole = (role: 'admin' | 'subscriber' | 'vendor') => {
+  const hasRole = async (req: any, res: Response, next: NextFunction) => {
+    const {
+      user: { _id },
+    } = req;
 
-//     const user = await service.findUserById(_id);
-//     if (!user) return next(new ErrorResponse(constants.status.UNAUTHORIZED, 'Unauthorized'));
+    const user = await service.findUserById(_id);
+    if (!user) return next(new ErrorResponse(STATUS_BAD_REQUEST, 'Resource not available'));
+    console.log(role);
 
-//     roles.forEach((role) => {
-//       user.roles.forEach((userRole) => {
-//         if (role === userRole) {
-//           isAllowed = true;
-//         }
-//       });
-//     });
+    if (role !== user.role) {
+      return next(new ErrorResponse(STATUS_BAD_REQUEST, "You don't have permission to perform this action"));
+    }
 
-//     if (!isAllowed) {
-//       return next(new ErrorResponse(constants.status.FORBIDDEN, "You don't have permission to perform this action"));
-//     }
-//     return next();
-//   };
+    return next();
+  };
 
-//   return hasRoles;
-// };
+  return hasRole;
+};

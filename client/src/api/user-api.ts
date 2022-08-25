@@ -16,7 +16,9 @@ const userAPI = {
   createUser: (data: ICreateUser) =>
     axiosPublic.post(`${path}`, data).then((response) => response.data),
   currentUser: () =>
-    axiosPrivate.get(`${path}/current`).then((response) => response),
+    axiosPrivate.get(`${path}/current-user`).then((response) => response),
+  currentAdmin: () =>
+    axiosPrivate.get(`${path}/current-admin`).then((response) => response),
 };
 
 export default userAPI;

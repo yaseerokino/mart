@@ -7,7 +7,7 @@ import {
   forgotUserPasswordSchema,
   resetUserPasswordSchema,
 } from '../schemas/user.schema';
-import { requireUser } from '../middlewares/auth.middleware';
+import { requireUser, requireRole } from '../middlewares/auth.middleware';
 
 class UserRoute {
   path = '/users';
@@ -39,7 +39,8 @@ class UserRoute {
       this.controller.resetUserPassword
     );
 
-    this.router.get(`${this.path}/current`, requireUser, this.controller.getCurrentUser);
+    this.router.get(`${this.path}/current-user`, requireUser, this.controller.getCurrentUser);
+    this.router.get(`${this.path}/current-admin`, requireUser, requireRole('admin'), this.controller.getCurrentUser);
   };
 }
 
